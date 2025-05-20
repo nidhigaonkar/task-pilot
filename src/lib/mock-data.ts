@@ -2,6 +2,10 @@
 import { Task, Role } from "./types";
 
 export const MOCK_PASSWORD = "clubmanager";
+export const MOCK_PASSWORDS = {
+  admin: "founder",
+  member: "clubmanager"
+};
 
 export const MOCK_TASKS: Task[] = [
   {
@@ -12,7 +16,11 @@ export const MOCK_TASKS: Task[] = [
     assignedTo: "secretary@example.com",
     assignedRole: "secretary",
     completed: false,
-    links: ["https://docs.google.com/document/example-link"]
+    links: ["https://docs.google.com/document/example-link"],
+    reminderSettings: {
+      daysBeforeDue: [3, 1],
+      reminderMessage: "Don't forget to prepare the meeting agenda!"
+    }
   },
   {
     id: "task-2",
@@ -21,7 +29,11 @@ export const MOCK_TASKS: Task[] = [
     dueDate: "2025-06-03T12:00:00Z",
     assignedTo: "treasurer@example.com",
     assignedRole: "treasurer",
-    completed: false
+    completed: false,
+    reminderSettings: {
+      daysBeforeDue: [3, 1],
+      reminderMessage: "Remember to submit the budget proposal soon."
+    }
   },
   {
     id: "task-3",
@@ -30,7 +42,11 @@ export const MOCK_TASKS: Task[] = [
     dueDate: "2025-05-25T12:00:00Z",
     assignedTo: "vice-president@example.com",
     assignedRole: "vice-president",
-    completed: true
+    completed: true,
+    reminderSettings: {
+      daysBeforeDue: [3, 1],
+      reminderMessage: "Please book the venue for our end-of-year event."
+    }
   },
   {
     id: "task-4",
@@ -40,7 +56,11 @@ export const MOCK_TASKS: Task[] = [
     assignedTo: "member@example.com",
     assignedRole: "member",
     completed: false,
-    links: ["https://club-website.example.com/admin"]
+    links: ["https://club-website.example.com/admin"],
+    reminderSettings: {
+      daysBeforeDue: [3, 1],
+      reminderMessage: "Remember to update our club website."
+    }
   },
   {
     id: "task-5",
@@ -49,7 +69,11 @@ export const MOCK_TASKS: Task[] = [
     dueDate: "2025-05-26T12:00:00Z",
     assignedTo: "president@example.com",
     assignedRole: "president",
-    completed: false
+    completed: false,
+    reminderSettings: {
+      daysBeforeDue: [3, 1],
+      reminderMessage: "Don't forget to send thank you emails to our guest speakers."
+    }
   }
 ];
 
