@@ -1,6 +1,6 @@
 
+import React from "react";
 import { TaskProvider } from "@/contexts/TaskContext";
-import { useTaskContext } from "@/contexts/TaskContext";
 import AuthScreen from "@/components/AuthScreen";
 import Dashboard from "@/components/Dashboard";
 
@@ -12,9 +12,15 @@ const IndexContent = () => {
 const Index = () => {
   return (
     <TaskProvider>
-      <IndexContent />
+      <IndexContentWrapper />
     </TaskProvider>
   );
+};
+
+// Separate component to use the context after provider is mounted
+const IndexContentWrapper = () => {
+  const { isAuthenticated } = useTaskContext();
+  return isAuthenticated ? <Dashboard /> : <AuthScreen />;
 };
 
 export default Index;

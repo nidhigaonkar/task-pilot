@@ -7,7 +7,6 @@ export interface Task {
   description: string;
   dueDate: string; // ISO format
   assignedTo: string; // email
-  assignedRole: Role;
   completed: boolean;
   links?: string[];
   reminderSettings: ReminderSettings;

@@ -2,7 +2,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { Task, Role, AccessLevel } from "@/lib/types";
 import { MOCK_TASKS, MOCK_PASSWORDS } from "@/lib/mock-data";
-import { filterTasksByRole, generateTaskId } from "@/lib/utils";
+import { generateTaskId } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 
 interface TaskContextType {
@@ -52,7 +52,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
   }, [tasks]);
 
   const filteredTasks = tasks.filter(task => 
-    (selectedRole === "all" || task.assignedRole === selectedRole) && 
+    (selectedRole === "all") && 
     (showCompletedTasks || !task.completed)
   );
 
@@ -124,7 +124,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         description: "Welcome to the IntelliHer Task Manager!",
       });
       return true;
-    } else if (password === MOCK_PASSWORDS.member) {
+    } else if (password === "leads") {
       setIsAuthenticated(true);
       setAccessLevel("member");
       toast({
