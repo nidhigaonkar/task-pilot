@@ -1,0 +1,18 @@
+
+export type Role = "president" | "vice-president" | "secretary" | "treasurer" | "member" | "all";
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string; // ISO format
+  assignedTo: string; // email
+  assignedRole: Role;
+  completed: boolean;
+  links?: string[];
+}
+
+export interface ReminderSettings {
+  daysBeforeDue: number[];
+  reminderMessage: string;
+}
