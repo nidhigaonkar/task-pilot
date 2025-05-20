@@ -10,9 +10,12 @@ export interface Task {
   assignedRole: Role;
   completed: boolean;
   links?: string[];
+  reminderSettings: ReminderSettings;
 }
 
 export interface ReminderSettings {
   daysBeforeDue: number[];
   reminderMessage: string;
 }
+
+export type AccessLevel = "member" | "admin";

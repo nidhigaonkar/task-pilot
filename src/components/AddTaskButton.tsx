@@ -16,7 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { ROLES } from "@/lib/mock-data";
-import { Role } from "@/lib/types";
+import { Role, ReminderSettings } from "@/lib/types";
+import { Plus, Minus } from "lucide-react";
 
 const AddTaskButton: React.FC = () => {
   const { addTask } = useTaskContext();
@@ -27,6 +28,8 @@ const AddTaskButton: React.FC = () => {
   const [assignedRole, setAssignedRole] = useState<Role>("member");
   const [assignedTo, setAssignedTo] = useState("");
   const [links, setLinks] = useState("");
+  const [reminderDays, setReminderDays] = useState<number[]>([3, 1]);
+  const [reminderMessage, setReminderMessage] = useState("Don't forget to complete your assigned task!");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
@@ -39,6 +42,12 @@ const AddTaskButton: React.FC = () => {
     if (!assignedTo.trim()) newErrors.assignedTo = "Email is required";
     if (assignedTo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assignedTo)) {
       newErrors.assignedTo = "Valid email is required";
+    }
+    if (reminderDays.length === 0) {
+      newErrors.reminderDays = "At least one reminder day is required";
+    }
+    if (!reminderMessage.trim()) {
+      newErrors.reminderMessage = "Reminder message is required";
     }
     
     setErrors(newErrors);
@@ -56,13 +65,19 @@ const AddTaskButton: React.FC = () => {
       .map(link => link.trim())
       .filter(link => link.length > 0);
 
+    const reminderSettings: ReminderSettings = {
+      daysBeforeDue: reminderDays,
+      reminderMessage
+    };
+
     addTask({
       title,
       description,
       dueDate: new Date(dueDate).toISOString(),
       assignedRole,
       assignedTo,
-      links: linkList.length > 0 ? linkList : undefined
+      links: linkList.length > 0 ? linkList : undefined,
+      reminderSettings
     });
     
     // Reset form and close dialog
@@ -72,8 +87,24 @@ const AddTaskButton: React.FC = () => {
     setAssignedRole("member");
     setAssignedTo("");
     setLinks("");
+    setReminderDays([3, 1]);
+    setReminderMessage("Don't forget to complete your assigned task!");
     setErrors({});
     setOpen(false);
+  };
+
+  const addReminderDay = () => {
+    setReminderDays([...reminderDays, 0]);
+  };
+
+  const removeReminderDay = (index: number) => {
+    setReminderDays(reminderDays.filter((_, i) => i !== index));
+  };
+
+  const updateReminderDay = (index: number, value: string) => {
+    const newDays = [...reminderDays];
+    newDays[index] = parseInt(value) || 0;
+    setReminderDays(newDays);
   };
 
   const filteredRoles = ROLES.filter(role => role !== "all");
@@ -169,6 +200,66 @@ const AddTaskButton: React.FC = () => {
                 onChange={(e) => setLinks(e.target.value)}
                 placeholder="https://example.com&#10;https://another-link.com"
               />
+            </div>
+            
+            {/* Reminder Settings */}
+            <div className="space-y-4 border rounded-md p-4 bg-gray-50">
+              <h3 className="font-medium">Reminder Settings</h3>
+              
+              <div className="grid gap-2">
+                <Label className={errors.reminderDays ? "text-destructive" : ""}>
+                  Reminder Days Before Due Date
+                  {errors.reminderDays && <span className="text-sm ml-1">({errors.reminderDays})</span>}
+                </Label>
+                <div className="space-y-2">
+                  {reminderDays.map((days, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Input 
+                        type="number" 
+                        value={days}
+                        min="0" 
+                        max="30" 
+                        onChange={(e) => updateReminderDay(index, e.target.value)}
+                        className="w-20"
+                      />
+                      <span>days before</span>
+                      {reminderDays.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => removeReminderDay(index)}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addReminderDay}
+                    className="mt-2"
+                  >
+                    <Plus className="h-4 w-4 mr-1" /> Add Reminder
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="reminderMessage" className={errors.reminderMessage ? "text-destructive" : ""}>
+                  Reminder Message
+                  {errors.reminderMessage && <span className="text-sm ml-1">({errors.reminderMessage})</span>}
+                </Label>
+                <Textarea
+                  id="reminderMessage"
+                  value={reminderMessage}
+                  onChange={(e) => setReminderMessage(e.target.value)}
+                  placeholder="Enter the reminder message"
+                  className={errors.reminderMessage ? "border-destructive" : ""}
+                />
+              </div>
             </div>
           </div>
           <DialogFooter>

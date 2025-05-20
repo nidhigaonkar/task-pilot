@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Link, Clock } from "lucide-react";
+import { Check, Link, Clock, Bell } from "lucide-react";
 import { formatDate, getDaysUntilDue, getTaskUrgency } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/contexts/TaskContext";
@@ -13,9 +13,10 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-  const { completeTask } = useTaskContext();
+  const { completeTask, accessLevel } = useTaskContext();
   const daysUntilDue = getDaysUntilDue(task.dueDate);
   const urgency = getTaskUrgency(task.dueDate);
+  const isAdmin = accessLevel === "admin";
   
   const urgencyClasses = {
     high: "bg-red-100 text-red-800 border-red-200",
@@ -43,11 +44,26 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         </div>
         <CardDescription className="flex items-center gap-1">
           <Clock className="h-3 w-3" /> 
-          {formatDate(task.dueDate)} • Assigned to: {task.assignedRole}
+          {formatDate(task.dueDate)} • 
+          {isAdmin ? `Assigned to: ${task.assignedTo} (${task.assignedRole})` : `Role: ${task.assignedRole}`}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-700">{task.description}</p>
+        
+        {isAdmin && task.reminderSettings && (
+          <div className="mt-2 bg-purple-50 p-2 rounded-md">
+            <div className="flex items-center gap-1 text-xs text-gray-600">
+              <Bell className="h-3 w-3" /> Reminders: 
+              {task.reminderSettings.daysBeforeDue.map((day, index) => (
+                <span key={index} className="bg-purple-100 text-purple-700 px-1 rounded-sm">
+                  {day} day{day !== 1 ? "s" : ""}
+                </span>
+              )).reduce((prev, curr, i) => i === 0 ? [curr] : [...prev, ', ', curr], [] as React.ReactNode[])}
+            </div>
+          </div>
+        )}
+        
         {task.links && task.links.length > 0 && (
           <div className="mt-2">
             {task.links.map((link, index) => (

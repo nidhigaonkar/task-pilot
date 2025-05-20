@@ -1,13 +1,14 @@
 
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { Task, Role } from "@/lib/types";
-import { MOCK_TASKS, MOCK_PASSWORD } from "@/lib/mock-data";
+import { Task, Role, AccessLevel } from "@/lib/types";
+import { MOCK_TASKS, MOCK_PASSWORDS } from "@/lib/mock-data";
 import { filterTasksByRole, generateTaskId } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 
 interface TaskContextType {
   tasks: Task[];
   isAuthenticated: boolean;
+  accessLevel: AccessLevel | null;
   selectedRole: Role;
   addTask: (task: Omit<Task, "id" | "completed">) => void;
   completeTask: (id: string) => void;
@@ -24,6 +25,7 @@ const TaskContext = createContext<TaskContextType | undefined>(undefined);
 export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>(MOCK_TASKS);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessLevel, setAccessLevel] = useState<AccessLevel | null>(null);
   const [selectedRole, setSelectedRole] = useState<Role>("all");
   const [showCompletedTasks, setShowCompletedTasks] = useState(false);
   const { toast } = useToast();
@@ -83,27 +85,35 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const authenticate = (password: string) => {
-    const isValid = password === MOCK_PASSWORD;
-    setIsAuthenticated(isValid);
-    
-    if (isValid) {
+    if (password === MOCK_PASSWORDS.admin) {
+      setIsAuthenticated(true);
+      setAccessLevel("admin");
       toast({
-        title: "Authentication Successful",
-        description: "Welcome to the Club Task Manager!",
+        title: "Admin Access Granted",
+        description: "Welcome to the IntelliHer Task Manager!",
       });
-    } else {
+      return true;
+    } else if (password === MOCK_PASSWORDS.member) {
+      setIsAuthenticated(true);
+      setAccessLevel("member");
       toast({
-        title: "Authentication Failed",
-        description: "Please check the password and try again.",
-        variant: "destructive",
+        title: "Member Access Granted",
+        description: "Welcome to the IntelliHer Task Manager!",
       });
+      return true;
     }
     
-    return isValid;
+    toast({
+      title: "Authentication Failed",
+      description: "Please check the password and try again.",
+      variant: "destructive",
+    });
+    return false;
   };
 
   const logout = () => {
     setIsAuthenticated(false);
+    setAccessLevel(null);
     toast({
       title: "Logged Out",
       description: "You have been logged out of the system.",
@@ -115,6 +125,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         tasks,
         isAuthenticated,
+        accessLevel,
         selectedRole,
         addTask,
         completeTask,

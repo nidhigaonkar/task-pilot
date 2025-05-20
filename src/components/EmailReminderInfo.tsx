@@ -2,36 +2,34 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { REMINDER_SETTINGS } from "@/lib/mock-data";
-import { Mail, Clock } from "lucide-react";
+import { Mail, Bell } from "lucide-react";
 
 const EmailReminderInfo: React.FC = () => {
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2">
-          <Mail className="h-5 w-5" /> Email Reminder System
+        <CardTitle className="flex items-center gap-2 text-purple-800">
+          <Mail className="h-5 w-5" /> IntelliHer Admin Dashboard
         </CardTitle>
         <CardDescription>
-          Automated reminders will be sent to team members based on these settings
+          You have admin access to manage tasks and reminders
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <p className="text-sm">Reminder schedule:</p>
-            <div className="flex gap-2">
-              {REMINDER_SETTINGS.daysBeforeDue.map((days) => (
-                <Badge key={days} variant="outline">
-                  {days} day{days !== 1 ? "s" : ""} before due date
-                </Badge>
-              ))}
-            </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Bell className="h-4 w-4 text-purple-700" />
+            <p className="text-sm text-purple-900">Reminder system:</p>
+            <Badge variant="secondary" className="bg-purple-200 text-purple-800">
+              Custom reminders per task
+            </Badge>
+            <Badge variant="secondary" className="bg-purple-200 text-purple-800">
+              Email notifications
+            </Badge>
           </div>
-          <p className="text-sm text-muted-foreground italic">
-            Note: Email integration will be available in the next version. 
-            For now, this is just a mockup of how the system will work.
+          <p className="text-sm text-purple-600 italic">
+            Email integration will be connected to your account for automated reminders.
+            Tasks can have individual reminder schedules that you set.
           </p>
         </div>
       </CardContent>
