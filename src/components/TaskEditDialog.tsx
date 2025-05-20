@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { format, parseISO } from "date-fns";
 import { CalendarIcon, Save } from "lucide-react";
 import { Task, Role } from "@/lib/types";
-import { ROLES } from "@/lib/mock-data";
+import { ROLES, REMINDER_SETTINGS } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { Button } from "@/components/ui/button";
@@ -52,11 +52,20 @@ interface ReminderDaysInput {
 const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }) => {
   const { updateTask } = useTaskContext();
   const roleOptions = ROLES.filter(role => role !== "all");
+  
+  // Ensure task has reminderSettings with defaults if undefined
+  const taskWithDefaults: Task = {
+    ...task,
+    reminderSettings: task.reminderSettings || {
+      daysBeforeDue: [3, 1],
+      reminderMessage: REMINDER_SETTINGS.reminderMessage
+    }
+  };
 
   const form = useForm<Task & ReminderDaysInput>({
     defaultValues: {
-      ...task,
-      days: task.reminderSettings.daysBeforeDue.join(", ")
+      ...taskWithDefaults,
+      days: taskWithDefaults.reminderSettings.daysBeforeDue.join(", ")
     }
   });
 
@@ -71,7 +80,7 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
       ...data,
       reminderSettings: {
         daysBeforeDue: daysArray,
-        reminderMessage: data.reminderSettings.reminderMessage
+        reminderMessage: data.reminderSettings.reminderMessage || REMINDER_SETTINGS.reminderMessage
       }
     };
 
