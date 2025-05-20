@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,9 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useTaskContext } from "@/contexts/TaskContext";
-import { ReminderSettings } from "@/lib/types";
+import { ReminderSettings, Role } from "@/lib/types";
 import { Plus, Minus } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ROLES } from "@/lib/mock-data";
 
 const AddTaskButton: React.FC = () => {
   const { addTask } = useTaskContext();
@@ -26,6 +27,7 @@ const AddTaskButton: React.FC = () => {
   const [dueDate, setDueDate] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
   const [assignedBy, setAssignedBy] = useState("");
+  const [assignedRole, setAssignedRole] = useState<Role>("member");
   const [links, setLinks] = useState("");
   const [reminderDays, setReminderDays] = useState<number[]>([3, 1]);
   const [reminderMessage, setReminderMessage] = useState("Don't forget to complete your assigned task!");
@@ -44,6 +46,7 @@ const AddTaskButton: React.FC = () => {
     if (assignedBy && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assignedBy)) {
       newErrors.assignedBy = "Valid email is required";
     }
+    if (!assignedRole) newErrors.assignedRole = "Role is required";
     if (reminderDays.length === 0) {
       newErrors.reminderDays = "At least one reminder day is required";
     }
@@ -76,6 +79,7 @@ const AddTaskButton: React.FC = () => {
       description,
       dueDate: new Date(dueDate).toISOString(),
       assignedTo,
+      assignedRole,
       assignedBy: assignedBy || undefined,
       links: linkList.length > 0 ? linkList : undefined,
       reminderSettings
@@ -87,6 +91,7 @@ const AddTaskButton: React.FC = () => {
     setDueDate("");
     setAssignedTo("");
     setAssignedBy("");
+    setAssignedRole("member");
     setLinks("");
     setReminderDays([3, 1]);
     setReminderMessage("Don't forget to complete your assigned task!");
@@ -113,14 +118,14 @@ const AddTaskButton: React.FC = () => {
       <DialogTrigger asChild>
         <Button>Add New Task</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-hidden p-0">
+      <DialogContent className="sm:max-w-[500px] h-[90vh] flex flex-col p-0 box-border rounded-lg overflow-hidden">
         <DialogHeader className="p-6 pb-2">
           <DialogTitle>Add New Task</DialogTitle>
           <DialogDescription>Create a new task for your club members.</DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="flex flex-col h-full">
-          <ScrollArea className="flex-1 px-6 py-2">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0">
+          <ScrollArea className="flex-1 min-h-0 overflow-auto px-6">
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="title" className={errors.title ? "text-destructive" : ""}>
@@ -185,6 +190,24 @@ const AddTaskButton: React.FC = () => {
                   className={errors.assignedBy ? "border-destructive" : ""}
                   placeholder="Your email (optional)"
                 />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="assignedRole" className={errors.assignedRole ? "text-destructive" : ""}>
+                  Assigned Role {errors.assignedRole && <span className="text-sm">({errors.assignedRole})</span>}
+                </Label>
+                <Select value={assignedRole} onValueChange={(value) => setAssignedRole(value as Role)}>
+                  <SelectTrigger className={errors.assignedRole ? "border-destructive" : ""}>
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLES.filter(role => role !== "all").map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role.charAt(0).toUpperCase() + role.slice(1).replace("-", " ")}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="grid gap-2">
@@ -261,8 +284,8 @@ const AddTaskButton: React.FC = () => {
             </div>
           </ScrollArea>
           
-          <DialogFooter className="p-6 pt-2 sticky bottom-0 bg-background border-t">
-            <Button type="submit">Add Task</Button>
+          <DialogFooter className="p-6 pt-2 pb-4 mt-auto bg-background border-t">
+            <Button type="submit">Done</Button>
           </DialogFooter>
         </form>
       </DialogContent>

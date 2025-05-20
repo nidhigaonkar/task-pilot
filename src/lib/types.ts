@@ -1,4 +1,3 @@
-
 export type Role = "president" | "vice-president" | "secretary" | "treasurer" | "member" | "all";
 
 export interface Task {
@@ -7,6 +6,7 @@ export interface Task {
   description: string;
   dueDate: string; // ISO format
   assignedTo: string; // email
+  assignedRole: Role; // role of the person assigned to the task
   completed: boolean;
   links?: string[];
   reminderSettings: ReminderSettings;
