@@ -12,6 +12,7 @@ interface TaskContextType {
   selectedRole: Role;
   addTask: (task: Omit<Task, "id" | "completed">) => void;
   completeTask: (id: string) => void;
+  updateTask: (task: Task) => void;
   setSelectedRole: (role: Role) => void;
   authenticate: (password: string) => boolean;
   logout: () => void;
@@ -84,6 +85,19 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updateTask = (updatedTask: Task) => {
+    setTasks(prev =>
+      prev.map(task =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+
+    toast({
+      title: "Task Updated",
+      description: `"${updatedTask.title}" has been updated.`,
+    });
+  };
+
   const authenticate = (password: string) => {
     if (password === MOCK_PASSWORDS.admin) {
       setIsAuthenticated(true);
@@ -129,6 +143,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         selectedRole,
         addTask,
         completeTask,
+        updateTask,
         setSelectedRole,
         authenticate,
         logout,

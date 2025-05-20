@@ -1,10 +1,9 @@
-
 import { Task, Role } from "./types";
 
 export const MOCK_PASSWORD = "clubmanager";
 export const MOCK_PASSWORDS = {
   admin: "founder",
-  member: "clubmanager"
+  member: "leads"
 };
 
 export const MOCK_TASKS: Task[] = [
