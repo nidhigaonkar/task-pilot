@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <h1 className="text-3xl font-bold text-primary mb-4 md:mb-0">IntelliHer Task Manager</h1>
         <div className="flex gap-4 w-full md:w-auto">
-          {isAdmin && <AddTaskButton />}
+          <AddTaskButton />
           <Button variant="outline" onClick={logout}>
             Log Out
           </Button>

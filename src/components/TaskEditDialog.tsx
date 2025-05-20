@@ -141,6 +141,20 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
 
             <FormField
               control={form.control}
+              name="assignedBy"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assigned By (Email)</FormLabel>
+                  <FormControl>
+                    <Input {...field || ""} type="email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="assignedRole"
               render={({ field }) => (
                 <FormItem>

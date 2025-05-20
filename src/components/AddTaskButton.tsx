@@ -20,13 +20,14 @@ import { Role, ReminderSettings } from "@/lib/types";
 import { Plus, Minus } from "lucide-react";
 
 const AddTaskButton: React.FC = () => {
-  const { addTask } = useTaskContext();
+  const { addTask, accessLevel } = useTaskContext();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [assignedRole, setAssignedRole] = useState<Role>("member");
   const [assignedTo, setAssignedTo] = useState("");
+  const [assignedBy, setAssignedBy] = useState("");
   const [links, setLinks] = useState("");
   const [reminderDays, setReminderDays] = useState<number[]>([3, 1]);
   const [reminderMessage, setReminderMessage] = useState("Don't forget to complete your assigned task!");
@@ -42,6 +43,9 @@ const AddTaskButton: React.FC = () => {
     if (!assignedTo.trim()) newErrors.assignedTo = "Email is required";
     if (assignedTo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assignedTo)) {
       newErrors.assignedTo = "Valid email is required";
+    }
+    if (assignedBy && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assignedBy)) {
+      newErrors.assignedBy = "Valid email is required";
     }
     if (reminderDays.length === 0) {
       newErrors.reminderDays = "At least one reminder day is required";
@@ -76,6 +80,7 @@ const AddTaskButton: React.FC = () => {
       dueDate: new Date(dueDate).toISOString(),
       assignedRole,
       assignedTo,
+      assignedBy: assignedBy || undefined,
       links: linkList.length > 0 ? linkList : undefined,
       reminderSettings
     });
@@ -86,6 +91,7 @@ const AddTaskButton: React.FC = () => {
     setDueDate("");
     setAssignedRole("member");
     setAssignedTo("");
+    setAssignedBy("");
     setLinks("");
     setReminderDays([3, 1]);
     setReminderMessage("Don't forget to complete your assigned task!");
@@ -188,6 +194,19 @@ const AddTaskButton: React.FC = () => {
                 value={assignedTo}
                 onChange={(e) => setAssignedTo(e.target.value)}
                 className={errors.assignedTo ? "border-destructive" : ""}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="assignedBy" className={errors.assignedBy ? "text-destructive" : ""}>
+                Assigned By (Email) {errors.assignedBy && <span className="text-sm">({errors.assignedBy})</span>}
+              </Label>
+              <Input
+                id="assignedBy"
+                type="email"
+                value={assignedBy}
+                onChange={(e) => setAssignedBy(e.target.value)}
+                className={errors.assignedBy ? "border-destructive" : ""}
+                placeholder="Your email (optional)"
               />
             </div>
             <div className="grid gap-2">

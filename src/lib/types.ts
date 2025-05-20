@@ -11,6 +11,7 @@ export interface Task {
   completed: boolean;
   links?: string[];
   reminderSettings: ReminderSettings;
+  assignedBy?: string; // email of person who created/assigned the task
 }
 
 export interface ReminderSettings {

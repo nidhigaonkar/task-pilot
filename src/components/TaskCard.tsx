@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Link, Clock, Bell, Edit } from "lucide-react";
+import { Check, Link, Clock, Bell, Edit, X } from "lucide-react";
 import { formatDate, getDaysUntilDue, getTaskUrgency } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/contexts/TaskContext";
@@ -14,7 +14,7 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-  const { completeTask, accessLevel } = useTaskContext();
+  const { completeTask, uncompleteTask, accessLevel } = useTaskContext();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const daysUntilDue = getDaysUntilDue(task.dueDate);
   const urgency = getTaskUrgency(task.dueDate);
@@ -53,6 +53,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             <Clock className="h-3 w-3" /> 
             {formatDate(task.dueDate)} • 
             {isAdmin ? `Assigned to: ${task.assignedTo} (${task.assignedRole})` : `Role: ${task.assignedRole}`}
+            {task.assignedBy && (
+              <span className="ml-1">• Assigned by: {task.assignedBy}</span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,7 +91,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           )}
         </CardContent>
         <CardFooter className="flex gap-2">
-          {!task.completed && (
+          {!task.completed ? (
             <Button 
               variant="outline" 
               size="sm" 
@@ -97,11 +100,23 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             >
               <Check className="mr-1 h-4 w-4" /> Mark Complete
             </Button>
-          )}
-          {task.completed && !isAdmin && (
-            <p className="text-sm text-green-600 w-full text-center">
-              <Check className="inline mr-1 h-4 w-4" /> Completed
-            </p>
+          ) : (
+            <>
+              {isAdmin ? (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-1/2" 
+                  onClick={() => uncompleteTask(task.id)}
+                >
+                  <X className="mr-1 h-4 w-4" /> Mark Incomplete
+                </Button>
+              ) : (
+                <p className="text-sm text-green-600 w-full text-center">
+                  <Check className="inline mr-1 h-4 w-4" /> Completed
+                </p>
+              )}
+            </>
           )}
           
           {isAdmin && (

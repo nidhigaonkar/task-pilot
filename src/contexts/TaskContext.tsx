@@ -12,6 +12,7 @@ interface TaskContextType {
   selectedRole: Role;
   addTask: (task: Omit<Task, "id" | "completed">) => void;
   completeTask: (id: string) => void;
+  uncompleteTask: (id: string) => void;
   updateTask: (task: Task) => void;
   setSelectedRole: (role: Role) => void;
   authenticate: (password: string) => boolean;
@@ -85,6 +86,22 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const uncompleteTask = (id: string) => {
+    setTasks(prev => 
+      prev.map(task => 
+        task.id === id ? { ...task, completed: false } : task
+      )
+    );
+    
+    const taskToUncomplete = tasks.find(task => task.id === id);
+    if (taskToUncomplete) {
+      toast({
+        title: "Task Status Updated",
+        description: `"${taskToUncomplete.title}" marked as incomplete.`,
+      });
+    }
+  };
+
   const updateTask = (updatedTask: Task) => {
     setTasks(prev =>
       prev.map(task =>
@@ -143,6 +160,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         selectedRole,
         addTask,
         completeTask,
+        uncompleteTask,
         updateTask,
         setSelectedRole,
         authenticate,
