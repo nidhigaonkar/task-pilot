@@ -65,25 +65,37 @@ const AddTaskButton: React.FC = () => {
       daysBeforeDue: reminderDays,
       reminderMessage
     };
-    addTask({
-      title,
-      description,
-      dueDate: new Date(dueDate).toISOString(),
-      assignedToEmail,
-      assignedByName,
-      links: linkList.length > 0 ? linkList : undefined,
-      reminderSettings
-    });
-    setTitle("");
-    setDescription("");
-    setDueDate("");
-    setAssignedToEmail("");
-    setAssignedByName("");
-    setLinks("");
-    setReminderDays([3, 1]);
-    setReminderMessage("Don't forget to complete your assigned task!");
-    setErrors({});
-    setOpen(false);
+    fetch('http://localhost:3001/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        description,
+        dueDate: new Date(dueDate).toISOString(),
+        assignedToEmail,
+        assignedByName,
+        links: linkList.length > 0 ? linkList : undefined,
+        reminderSettings
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          addTask(data.task);
+          setTitle("");
+          setDescription("");
+          setDueDate("");
+          setAssignedToEmail("");
+          setAssignedByName("");
+          setLinks("");
+          setReminderDays([3, 1]);
+          setReminderMessage("Don't forget to complete your assigned task!");
+          setErrors({});
+          setOpen(false);
+        } else {
+          alert('Failed to create task: ' + (data.error || 'Unknown error'));
+        }
+      });
   };
 
   const addReminderDay = () => {

@@ -25,49 +25,48 @@ interface TaskContextType {
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
 export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tasks, setTasks] = useState<Task[]>(MOCK_TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessLevel, setAccessLevel] = useState<AccessLevel | null>(null);
   const [selectedRole, setSelectedRole] = useState<Role>("all");
   const [showCompletedTasks, setShowCompletedTasks] = useState(false);
   const { toast } = useToast();
 
-  // Load tasks from localStorage if available
+  // Fetch tasks from backend on mount
   useEffect(() => {
-    const storedTasks = localStorage.getItem("club-tasks");
-    if (storedTasks) {
-      try {
-        setTasks(JSON.parse(storedTasks));
-      } catch (error) {
-        console.error("Error parsing tasks from localStorage:", error);
-        // Fall back to mock data if parsing fails
-        setTasks(MOCK_TASKS);
-      }
-    }
+    fetch('http://localhost:3001/api/tasks')
+      .then(res => res.json())
+      .then(data => setTasks(data));
   }, []);
-
-  // Save tasks to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem("club-tasks", JSON.stringify(tasks));
-  }, [tasks]);
 
   const filteredTasks = tasks.filter(task => 
     (selectedRole === "all") && 
     (showCompletedTasks || !task.completed)
   );
 
+  // Add task using backend
   const addTask = (task: Omit<Task, "id" | "completed">) => {
-    const newTask: Task = {
-      ...task,
-      id: generateTaskId(),
-      completed: false
-    };
-    
-    setTasks(prev => [...prev, newTask]);
-    toast({
-      title: "Task Added",
-      description: `"${task.title}" has been added successfully.`
-    });
+    fetch('http://localhost:3001/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(task)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(prev => [...prev, data.task]);
+          toast({
+            title: "Task Added",
+            description: `"${data.task.title}" has been added successfully.`
+          });
+        } else {
+          toast({
+            title: "Failed to Add Task",
+            description: data.error || 'Unknown error',
+            variant: "destructive"
+          });
+        }
+      });
   };
 
   const completeTask = (id: string) => {

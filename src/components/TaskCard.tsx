@@ -36,8 +36,20 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   };
 
   const handleRemind = () => {
-    // Placeholder: replace with backend call to send email
-    alert("Reminder sent to: " + (task.assignedToEmail || task.assignedToName));
+    fetch(`http://localhost:3001/api/tasks/${task.id}/remind`, {
+      method: 'POST'
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Reminder email sent!');
+        } else {
+          alert('Failed to send reminder: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch(err => {
+        alert('Failed to send reminder: ' + err.message);
+      });
   };
 
   return (
@@ -62,8 +74,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <CardDescription className="flex items-center gap-1">
             <Clock className="h-3 w-3" /> 
             {formatDate(task.dueDate)}
-            {task.assignedBy && (
-              <span className="ml-1">• Assigned by: {task.assignedBy}</span>
+            {task.assignedToEmail && (
+              <span className="ml-1">• Assigned to: {task.assignedToEmail}</span>
+            )}
+            {task.assignedByName && (
+              <span className="ml-1">• Assigned by: {task.assignedByName}</span>
             )}
           </CardDescription>
         </CardHeader>

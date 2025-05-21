@@ -57,8 +57,8 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
   const form = useForm<Task & ReminderDaysInput>({
     defaultValues: {
       ...taskWithDefaults,
-      assignedToName: taskWithDefaults.assignedToName || "",
       assignedToEmail: taskWithDefaults.assignedToEmail || "",
+      assignedByName: taskWithDefaults.assignedByName || "",
       days: taskWithDefaults.reminderSettings.daysBeforeDue.join(", ")
     }
   });
@@ -72,8 +72,8 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
 
     const updatedTask: Task = {
       ...data,
-      assignedToName: accessLevel === "member" ? data.assignedToName : undefined,
-      assignedToEmail: accessLevel === "admin" ? data.assignedToEmail : undefined,
+      assignedToEmail: data.assignedToEmail,
+      assignedByName: data.assignedByName,
       reminderSettings: {
         daysBeforeDue: daysArray,
         reminderMessage: data.reminderSettings.reminderMessage || REMINDER_SETTINGS.reminderMessage
@@ -134,44 +134,28 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
                   )}
                 />
 
-                {accessLevel === "admin" ? (
-                  <FormField
-                    control={form.control}
-                    name="assignedToEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Assigned To (Email)</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="email" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                ) : (
-                  <FormField
-                    control={form.control}
-                    name="assignedToName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Assigned To (Name)</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
+                <FormField
+                  control={form.control}
+                  name="assignedToEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Assigned To (Email)</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
-                  name="assignedBy"
+                  name="assignedByName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Assigned By (Email)</FormLabel>
+                      <FormLabel>Assigned By (Name)</FormLabel>
                       <FormControl>
-                        <Input {...field || ""} type="email" />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
