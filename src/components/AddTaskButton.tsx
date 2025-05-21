@@ -20,12 +20,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ROLES } from "@/lib/mock-data";
 
 const AddTaskButton: React.FC = () => {
-  const { addTask } = useTaskContext();
+  const { addTask, accessLevel } = useTaskContext();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [assignedTo, setAssignedTo] = useState("");
+  const [assignedToEmail, setAssignedToEmail] = useState("");
+  const [assignedByName, setAssignedByName] = useState("");
   const [assignedBy, setAssignedBy] = useState("");
   const [assignedRole, setAssignedRole] = useState<Role>("member");
   const [links, setLinks] = useState("");
@@ -35,63 +36,49 @@ const AddTaskButton: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
     if (!title.trim()) newErrors.title = "Title is required";
     if (!description.trim()) newErrors.description = "Description is required";
     if (!dueDate) newErrors.dueDate = "Due date is required";
-    if (!assignedTo.trim()) newErrors.assignedTo = "Email is required";
-    if (assignedTo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assignedTo)) {
-      newErrors.assignedTo = "Valid email is required";
+    if (!assignedToEmail.trim()) newErrors.assignedToEmail = "Email is required";
+    if (assignedToEmail && !/^[^\s@]+@[^-\s@]+\.[^\s@]+$/.test(assignedToEmail)) {
+      newErrors.assignedToEmail = "Valid email is required";
     }
-    if (assignedBy && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(assignedBy)) {
-      newErrors.assignedBy = "Valid email is required";
-    }
-    if (!assignedRole) newErrors.assignedRole = "Role is required";
+    if (!assignedByName.trim()) newErrors.assignedByName = "Your name is required";
     if (reminderDays.length === 0) {
       newErrors.reminderDays = "At least one reminder day is required";
     }
     if (!reminderMessage.trim()) {
       newErrors.reminderMessage = "Reminder message is required";
     }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
-    // Process links
     const linkList = links
       .split(/[\n,]/)
       .map(link => link.trim())
       .filter(link => link.length > 0);
-
     const reminderSettings: ReminderSettings = {
       daysBeforeDue: reminderDays,
       reminderMessage
     };
-
     addTask({
       title,
       description,
       dueDate: new Date(dueDate).toISOString(),
-      assignedTo,
-      assignedRole,
-      assignedBy: assignedBy || undefined,
+      assignedToEmail,
+      assignedByName,
       links: linkList.length > 0 ? linkList : undefined,
       reminderSettings
     });
-    
-    // Reset form and close dialog
     setTitle("");
     setDescription("");
     setDueDate("");
-    setAssignedTo("");
-    setAssignedBy("");
-    setAssignedRole("member");
+    setAssignedToEmail("");
+    setAssignedByName("");
     setLinks("");
     setReminderDays([3, 1]);
     setReminderMessage("Don't forget to complete your assigned task!");
@@ -165,49 +152,32 @@ const AddTaskButton: React.FC = () => {
                 />
               </div>
               
+              {/* Only Assigned To (Email) field for all users */}
               <div className="grid gap-2">
-                <Label htmlFor="assignedTo" className={errors.assignedTo ? "text-destructive" : ""}>
-                  Assigned To (Email) {errors.assignedTo && <span className="text-sm">({errors.assignedTo})</span>}
+                <Label htmlFor="assignedToEmail" className={errors.assignedToEmail ? "text-destructive" : ""}>
+                  Assigned To (Email) {errors.assignedToEmail && <span className="text-sm">({errors.assignedToEmail})</span>}
                 </Label>
                 <Input
-                  id="assignedTo"
+                  id="assignedToEmail"
                   type="email"
-                  value={assignedTo}
-                  onChange={(e) => setAssignedTo(e.target.value)}
-                  className={errors.assignedTo ? "border-destructive" : ""}
+                  value={assignedToEmail}
+                  onChange={(e) => setAssignedToEmail(e.target.value)}
+                  className={errors.assignedToEmail ? "border-destructive" : ""}
                 />
               </div>
               
+              {/* Assigned By (Name) for all users */}
               <div className="grid gap-2">
-                <Label htmlFor="assignedBy" className={errors.assignedBy ? "text-destructive" : ""}>
-                  Assigned By (Email) {errors.assignedBy && <span className="text-sm">({errors.assignedBy})</span>}
+                <Label htmlFor="assignedByName" className={errors.assignedByName ? "text-destructive" : ""}>
+                  Assigned By (Name) {errors.assignedByName && <span className="text-sm">({errors.assignedByName})</span>}
                 </Label>
                 <Input
-                  id="assignedBy"
-                  type="email"
-                  value={assignedBy}
-                  onChange={(e) => setAssignedBy(e.target.value)}
-                  className={errors.assignedBy ? "border-destructive" : ""}
-                  placeholder="Your email (optional)"
+                  id="assignedByName"
+                  value={assignedByName}
+                  onChange={(e) => setAssignedByName(e.target.value)}
+                  className={errors.assignedByName ? "border-destructive" : ""}
+                  placeholder="Your name"
                 />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="assignedRole" className={errors.assignedRole ? "text-destructive" : ""}>
-                  Assigned Role {errors.assignedRole && <span className="text-sm">({errors.assignedRole})</span>}
-                </Label>
-                <Select value={assignedRole} onValueChange={(value) => setAssignedRole(value as Role)}>
-                  <SelectTrigger className={errors.assignedRole ? "border-destructive" : ""}>
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ROLES.filter(role => role !== "all").map((role) => (
-                      <SelectItem key={role} value={role}>
-                        {role.charAt(0).toUpperCase() + role.slice(1).replace("-", " ")}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
               
               <div className="grid gap-2">

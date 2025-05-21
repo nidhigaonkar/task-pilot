@@ -5,12 +5,13 @@ export interface Task {
   title: string;
   description: string;
   dueDate: string; // ISO format
-  assignedTo: string; // email
-  assignedRole: Role; // role of the person assigned to the task
+  assignedTo?: string; // legacy, for backward compatibility
+  assignedToEmail: string; // for admins or for reminders, now required
   completed: boolean;
   links?: string[];
   reminderSettings: ReminderSettings;
-  assignedBy?: string; // email of person who created/assigned the task
+  assignedBy?: string; // legacy, for backward compatibility
+  assignedByName?: string; // for both leads and admins
 }
 
 export interface ReminderSettings {

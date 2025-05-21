@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Link, Clock, Bell, Edit, X, Trash2 } from "lucide-react";
+import { Check, Link, Clock, Bell, Edit, X, Trash2, Mail } from "lucide-react";
 import { formatDate, getDaysUntilDue, getTaskUrgency } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/contexts/TaskContext";
@@ -35,6 +35,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     }
   };
 
+  const handleRemind = () => {
+    // Placeholder: replace with backend call to send email
+    alert("Reminder sent to: " + (task.assignedToEmail || task.assignedToName));
+  };
+
   return (
     <>
       <Card className={`task-card border-l-4 ${
@@ -56,8 +61,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           </div>
           <CardDescription className="flex items-center gap-1">
             <Clock className="h-3 w-3" /> 
-            {formatDate(task.dueDate)} • 
-            {isAdmin ? `Assigned to: ${task.assignedTo} (${task.assignedRole})` : `Role: ${task.assignedRole}`}
+            {formatDate(task.dueDate)}
             {task.assignedBy && (
               <span className="ml-1">• Assigned by: {task.assignedBy}</span>
             )}
@@ -133,6 +137,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 onClick={handleEditClick}
               >
                 <Edit className="mr-1 h-4 w-4" /> Edit Task
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-blue-600"
+                onClick={handleRemind}
+                title="Remind"
+              >
+                <Mail className="h-4 w-4" />
               </Button>
               <Button
                 type="button"
