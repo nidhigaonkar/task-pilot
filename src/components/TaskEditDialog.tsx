@@ -1,8 +1,7 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { format, parseISO } from "date-fns";
-import { CalendarIcon, Save } from "lucide-react";
+import { CalendarIcon, Save, Trash2 } from "lucide-react";
 import { Task } from "@/lib/types";
 import { REMINDER_SETTINGS } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
@@ -44,7 +43,7 @@ interface ReminderDaysInput {
 }
 
 const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }) => {
-  const { updateTask } = useTaskContext();
+  const { updateTask, deleteTask, accessLevel } = useTaskContext();
   
   // Ensure task has reminderSettings with defaults if undefined
   const taskWithDefaults: Task = {
@@ -81,16 +80,27 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
     onClose();
   };
 
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this task? This action cannot be undone.")) {
+      deleteTask(task.id);
+      onClose();
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[600px] h-[90vh] flex flex-col p-0 box-border rounded-lg overflow-hidden">
+        <DialogHeader className="p-6 pb-2 flex flex-row items-center justify-between">
           <DialogTitle>Edit Task</DialogTitle>
+          {accessLevel === "admin" && (
+            <Button type="button" variant="ghost" size="icon" onClick={handleDelete} title="Delete Task">
+              <Trash2 className="h-5 w-5 text-destructive" />
+            </Button>
+          )}
         </DialogHeader>
-        
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex flex-col">
-            <ScrollArea className="flex-1 pr-4 max-h-[60vh]">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full min-h-0">
+            <ScrollArea className="flex-1 min-h-0 overflow-auto px-6">
               <div className="space-y-6 pt-4">
                 <FormField
                   control={form.control}
@@ -221,8 +231,7 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
                 />
               </div>
             </ScrollArea>
-
-            <DialogFooter className="pt-4 sticky bottom-0 bg-background">
+            <DialogFooter className="p-6 pt-2 pb-4 mt-auto bg-background border-t">
               <Button type="submit">
                 <Save className="mr-2 h-4 w-4" /> Save Changes
               </Button>

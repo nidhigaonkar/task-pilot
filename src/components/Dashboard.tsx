@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useTaskContext } from "@/contexts/TaskContext";
@@ -24,8 +23,6 @@ const Dashboard: React.FC = () => {
       </div>
       
       {isAdmin && <EmailReminderInfo />}
-      
-      <TaskFilter />
       
       <TaskList className="pb-8" />
     </div>

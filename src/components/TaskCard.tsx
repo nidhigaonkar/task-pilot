@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Link, Clock, Bell, Edit, X } from "lucide-react";
+import { Check, Link, Clock, Bell, Edit, X, Trash2 } from "lucide-react";
 import { formatDate, getDaysUntilDue, getTaskUrgency } from "@/lib/utils";
 import { Task } from "@/lib/types";
 import { useTaskContext } from "@/contexts/TaskContext";
@@ -14,7 +13,7 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
-  const { completeTask, uncompleteTask, accessLevel } = useTaskContext();
+  const { completeTask, uncompleteTask, accessLevel, deleteTask } = useTaskContext();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const daysUntilDue = getDaysUntilDue(task.dueDate);
   const urgency = getTaskUrgency(task.dueDate);
@@ -28,6 +27,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 
   const handleEditClick = () => {
     setIsEditDialogOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this task? This action cannot be undone.")) {
+      deleteTask(task.id);
+    }
   };
 
   return (
@@ -120,14 +125,26 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           )}
           
           {isAdmin && (
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              className="w-1/2" 
-              onClick={handleEditClick}
-            >
-              <Edit className="mr-1 h-4 w-4" /> Edit Task
-            </Button>
+            <>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="w-1/2" 
+                onClick={handleEditClick}
+              >
+                <Edit className="mr-1 h-4 w-4" /> Edit Task
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-destructive"
+                onClick={handleDelete}
+                title="Delete Task"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </>
           )}
         </CardFooter>
       </Card>

@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { Task, Role, AccessLevel } from "@/lib/types";
 import { MOCK_TASKS, MOCK_PASSWORDS } from "@/lib/mock-data";
@@ -20,6 +19,7 @@ interface TaskContextType {
   showCompletedTasks: boolean;
   setShowCompletedTasks: (show: boolean) => void;
   filteredTasks: Task[];
+  deleteTask: (id: string) => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -151,6 +151,15 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const deleteTask = (id: string) => {
+    setTasks(prev => prev.filter(task => task.id !== id));
+    toast({
+      title: "Task Deleted",
+      description: `The task has been deleted.`,
+      variant: "destructive"
+    });
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -167,7 +176,8 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         logout,
         showCompletedTasks,
         setShowCompletedTasks,
-        filteredTasks
+        filteredTasks,
+        deleteTask
       }}
     >
       {children}
