@@ -151,12 +151,33 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const deleteTask = (id: string) => {
-    setTasks(prev => prev.filter(task => task.id !== id));
-    toast({
-      title: "Task Deleted",
-      description: `The task has been deleted.`,
-      variant: "destructive"
-    });
+    fetch(`http://localhost:3001/api/tasks/${id}`, {
+      method: 'DELETE'
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(prev => prev.filter(task => task.id !== id));
+          toast({
+            title: "Task Deleted",
+            description: `The task has been deleted.`,
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Failed to Delete Task",
+            description: data.error || 'Unknown error',
+            variant: "destructive"
+          });
+        }
+      })
+      .catch(err => {
+        toast({
+          title: "Failed to Delete Task",
+          description: err.message,
+          variant: "destructive"
+        });
+      });
   };
 
   return (

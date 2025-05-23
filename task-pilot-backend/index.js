@@ -107,6 +107,19 @@ app.post('/api/tasks/:id/remind', (req, res) => {
   });
 });
 
+// API: Delete a task
+app.delete('/api/tasks/:id', (req, res) => {
+  const tasks = loadTasks();
+  const taskIndex = tasks.findIndex(t => t.id === req.params.id);
+  if (taskIndex !== -1) {
+    tasks.splice(taskIndex, 1);
+    saveTasks(tasks);
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Task not found' });
+  }
+});
+
 // CRON: Check daily for reminders to send
 cron.schedule('0 8 * * *', async () => {
   const tasks = loadTasks();
