@@ -55,8 +55,8 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
       .then(data => {
         if (data.success) {
           setTasks(prev => [...prev, data.task]);
-          toast({
-            title: "Task Added",
+    toast({
+      title: "Task Added",
             description: `"${data.task.title}" has been added successfully.`
           });
         } else {
@@ -66,7 +66,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
             variant: "destructive"
           });
         }
-      });
+    });
   };
 
   const completeTask = (id: string) => {

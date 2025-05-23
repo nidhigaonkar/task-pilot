@@ -145,14 +145,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           
           {isAdmin && (
             <>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className="w-1/2" 
-                onClick={handleEditClick}
-              >
-                <Edit className="mr-1 h-4 w-4" /> Edit Task
-              </Button>
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              className="w-1/2" 
+              onClick={handleEditClick}
+            >
+              <Edit className="mr-1 h-4 w-4" /> Edit Task
+            </Button>
               <Button
                 type="button"
                 variant="ghost"

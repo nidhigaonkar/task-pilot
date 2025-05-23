@@ -19,7 +19,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ROLES } from "@/lib/mock-data";
 
-const AddTaskButton: React.FC = () => {
+interface AddTaskButtonProps {
+  className?: string;
+}
+
+const AddTaskButton: React.FC<AddTaskButtonProps> = ({ className }) => {
   const { addTask, accessLevel } = useTaskContext();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -69,29 +73,29 @@ const AddTaskButton: React.FC = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        title,
-        description,
-        dueDate: new Date(dueDate).toISOString(),
+      title,
+      description,
+      dueDate: new Date(dueDate).toISOString(),
         assignedToEmail,
         assignedByName,
-        links: linkList.length > 0 ? linkList : undefined,
-        reminderSettings
+      links: linkList.length > 0 ? linkList : undefined,
+      reminderSettings
       })
     })
       .then(res => res.json())
       .then(data => {
         if (data.success) {
           addTask(data.task);
-          setTitle("");
-          setDescription("");
-          setDueDate("");
+    setTitle("");
+    setDescription("");
+    setDueDate("");
           setAssignedToEmail("");
           setAssignedByName("");
-          setLinks("");
-          setReminderDays([3, 1]);
-          setReminderMessage("Don't forget to complete your assigned task!");
-          setErrors({});
-          setOpen(false);
+    setLinks("");
+    setReminderDays([3, 1]);
+    setReminderMessage("Don't forget to complete your assigned task!");
+    setErrors({});
+    setOpen(false);
         } else {
           alert('Failed to create task: ' + (data.error || 'Unknown error'));
         }
@@ -115,7 +119,7 @@ const AddTaskButton: React.FC = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Add New Task</Button>
+        <Button className={className}>Add New Task</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] h-[90vh] flex flex-col p-0 box-border rounded-lg overflow-hidden">
         <DialogHeader className="p-6 pb-2">

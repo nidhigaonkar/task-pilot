@@ -13,9 +13,9 @@ const Dashboard: React.FC = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 className="text-3xl font-bold text-primary mb-4 md:mb-0">IntelliHer Task Manager</h1>
+        <h1 className="text-3xl font-bold text-[#36b4a9] mb-4 md:mb-0">IntelliHer Task Manager</h1>
         <div className="flex gap-4 w-full md:w-auto">
-          <AddTaskButton />
+          <AddTaskButton className="bg-[#36b4a9] hover:bg-[#2d9a90]" />
           <Button variant="outline" onClick={logout}>
             Log Out
           </Button>
@@ -24,6 +24,7 @@ const Dashboard: React.FC = () => {
       
       {isAdmin && <EmailReminderInfo />}
       
+      <TaskFilter />
       <TaskList className="pb-8" />
     </div>
   );

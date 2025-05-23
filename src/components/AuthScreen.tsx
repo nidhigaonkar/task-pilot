@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,10 +23,10 @@ const AuthScreen = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
       <Card className="w-[350px] shadow-lg border-purple-200">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-purple-800">IntelliHer Task Manager</CardTitle>
+          <CardTitle className="text-2xl font-bold text-[#36b4a9]">IntelliHer Task Manager</CardTitle>
           <CardDescription>Enter your access password to continue</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -51,7 +50,7 @@ const AuthScreen = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
+            <Button type="submit" className="w-full bg-[#36b4a9] hover:bg-[#2d9a90]">
               Access Dashboard
             </Button>
           </CardFooter>
