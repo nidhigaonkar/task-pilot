@@ -59,11 +59,11 @@ app.post('/api/tasks', async (req, res) => {
   saveTasks(tasks);
 
   // Send immediate email
-  await sendEmail(
-    assignedToEmail,
-    `New Task Assigned: ${title}`,
-    `You have been assigned a new task: ${title}\nDue: ${dueDate}\nAssigned by: ${assignedByName}`
-  );
+  // await sendEmail(
+  //   assignedToEmail,
+  //   `New Task Assigned: ${title}`,
+  //   `You have been assigned a new task: ${title}\nDue: ${dueDate}\nAssigned by: ${assignedByName}`
+  // );
 
   res.json({ success: true, task: newTask });
 });

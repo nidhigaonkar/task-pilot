@@ -286,5 +286,69 @@
     "assignedByName": "nidhi",
     "completed": false,
     "createdAt": "2025-05-21T04:56:42.957Z"
+  },
+  {
+    "id": "1747804401012",
+    "title": "hiiiiiiiii",
+    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
+    "dueDate": "2025-05-22T00:00:00.000Z",
+    "reminderSettings": {
+      "daysBeforeDue": [
+        3,
+        1
+      ],
+      "reminderMessage": "Don't forget to complete your assigned task!"
+    },
+    "assignedByName": "Nidhi",
+    "completed": false,
+    "createdAt": "2025-05-21T05:13:21.012Z"
+  },
+  {
+    "id": "1747804401018",
+    "title": "hiiiiiiiii",
+    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
+    "dueDate": "2025-05-22T00:00:00.000Z",
+    "reminderSettings": {
+      "daysBeforeDue": [
+        3,
+        1
+      ],
+      "reminderMessage": "Don't forget to complete your assigned task!"
+    },
+    "assignedByName": "Nidhi",
+    "completed": false,
+    "createdAt": "2025-05-21T05:13:21.018Z"
+  },
+  {
+    "id": "1748024166215",
+    "title": "hi pappa",
+    "assignedToEmail": "pgaonkar@hotmail.com",
+    "dueDate": "2025-05-24T00:00:00.000Z",
+    "reminderSettings": {
+      "daysBeforeDue": [
+        3,
+        1
+      ],
+      "reminderMessage": "Don't forget to complete your assigned task!"
+    },
+    "assignedByName": "Nidhi",
+    "completed": false,
+    "createdAt": "2025-05-23T18:16:06.215Z"
+  },
+  {
+    "id": "1748024166220",
+    "title": "hi pappa",
+    "assignedToEmail": "pgaonkar@hotmail.com",
+    "dueDate": "2025-05-24T00:00:00.000Z",
+    "reminderSettings": {
+      "daysBeforeDue": [
+        3,
+        1
+      ],
+      "reminderMessage": "Don't forget to complete your assigned task!"
+    },
+    "assignedByName": "Nidhi",
+    "completed": false,
+    "createdAt": "2025-05-23T18:16:06.220Z"
   }
 ]
