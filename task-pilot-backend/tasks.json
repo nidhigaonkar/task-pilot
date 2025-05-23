@@ -60,7 +60,7 @@
       "reminderMessage": "Don't forget to complete your assigned task!"
     },
     "assignedByName": "hi",
-    "completed": true,
+    "completed": false,
     "createdAt": "2025-05-21T04:43:17.637Z"
   },
   {
@@ -97,7 +97,7 @@
   },
   {
     "id": "1748025960220",
-    "title": "hi",
+    "title": "hello hello",
     "assignedToEmail": "gaonkar.nidhi1@gmail.com",
     "dueDate": "2025-05-24T00:00:00.000Z",
     "reminderSettings": {
@@ -105,42 +105,44 @@
         3,
         1
       ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
+      "reminderMessage": "YOOOO my reminder message is here!"
     },
-    "assignedByName": "hi",
+    "assignedByName": "hello testing",
     "completed": false,
-    "createdAt": "2025-05-23T18:46:00.220Z"
+    "createdAt": "2025-05-23T18:46:00.220Z",
+    "description": "hello testing"
   },
   {
-    "id": "1748026623445",
-    "title": "elooo",
-    "assignedToEmail": "mdfsdfnksdf@gmail.com",
+    "id": "1748028275699",
+    "title": "hihiihiihih",
+    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
     "dueDate": "2025-05-24T00:00:00.000Z",
     "reminderSettings": {
       "daysBeforeDue": [
         3,
-        1
+        1,
+        2
       ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
+      "reminderMessage": "hi"
     },
-    "assignedByName": "dfsdkf",
+    "assignedByName": "hihhihih",
     "completed": false,
-    "createdAt": "2025-05-23T18:57:03.445Z"
+    "createdAt": "2025-05-23T19:24:35.699Z"
   },
   {
-    "id": "1748027253719",
-    "title": "emsdklfm",
-    "assignedToEmail": "jkadnkasnd@gmail.com",
-    "dueDate": "2025-05-28T00:00:00.000Z",
+    "id": "1748028383270",
+    "title": "testing testing",
+    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
+    "dueDate": "2025-05-29T00:00:00.000Z",
     "reminderSettings": {
       "daysBeforeDue": [
         3,
         1
       ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
+      "reminderMessage": "This is a reminder that your task is due soon. Please complete it as soon as possible."
     },
-    "assignedByName": "sdf",
+    "assignedByName": "hi",
     "completed": false,
-    "createdAt": "2025-05-23T19:07:33.719Z"
+    "createdAt": "2025-05-23T19:26:23.270Z"
   }
 ]

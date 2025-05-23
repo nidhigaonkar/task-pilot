@@ -45,13 +45,10 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       (showCompletedTasks || !task.completed)
     )
     .sort((a, b) => {
-      // If both tasks have the same completion status, maintain their original order
       if (a.completed === b.completed) return 0;
-      // Put incomplete tasks first
       return a.completed ? 1 : -1;
     });
 
-  // Add task using backend
   const addTask = (task: Omit<Task, "id" | "completed">) => {
     fetch('http://localhost:3001/api/tasks', {
       method: 'POST',
@@ -62,8 +59,8 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       .then(data => {
         if (data.success) {
           setTasks(prev => [...prev, data.task]);
-    toast({
-      title: "Task Added",
+          toast({
+            title: "Task Added",
             description: `"${data.task.title}" has been added successfully.`
           });
         } else {
@@ -73,7 +70,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
             variant: "destructive"
           });
         }
-    });
+      });
   };
 
   const completeTask = (id: string) => {
@@ -103,13 +100,6 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
             variant: "destructive"
           });
         }
-      })
-      .catch(err => {
-        toast({
-          title: "Failed to Complete Task",
-          description: err.message,
-          variant: "destructive"
-        });
       });
   };
 
@@ -140,6 +130,36 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
             variant: "destructive"
           });
         }
+      });
+  };
+
+  const updateTask = (updatedTask: Task) => {
+    fetch(`http://localhost:3001/api/tasks/${updatedTask.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedTask)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(prev =>
+            prev.map(task =>
+              task.id === updatedTask.id ? data.task : task
+            )
+          );
+          toast({
+            title: "Task Updated",
+            description: `"${updatedTask.title}" has been updated.`,
+          });
+        } else {
+          toast({
+            title: "Failed to Update Task",
+            description: data.error || 'Unknown error',
+            variant: "destructive"
+          });
+        }
       })
       .catch(err => {
         toast({
@@ -148,19 +168,6 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
           variant: "destructive"
         });
       });
-  };
-
-  const updateTask = (updatedTask: Task) => {
-    setTasks(prev =>
-      prev.map(task =>
-        task.id === updatedTask.id ? updatedTask : task
-      )
-    );
-
-    toast({
-      title: "Task Updated",
-      description: `"${updatedTask.title}" has been updated.`,
-    });
   };
 
   const authenticate = (password: string) => {
@@ -219,13 +226,6 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
             variant: "destructive"
           });
         }
-      })
-      .catch(err => {
-        toast({
-          title: "Failed to Delete Task",
-          description: err.message,
-          variant: "destructive"
-        });
       });
   };
 

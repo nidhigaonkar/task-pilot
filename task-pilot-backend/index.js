@@ -108,10 +108,22 @@ app.post('/api/tasks/:id/remind', (req, res) => {
   }
   const email = (task.assignedToEmail || '').trim();
   console.log('Sending reminder to:', email);
+  
+  // Format the date to show only YYYY-MM-DD
+  const dueDate = new Date(task.dueDate).toISOString().split('T')[0];
+  
+  // Build email body with default reminder message
+  let emailBody = `This is a reminder for your task: ${task.title}\n`;
+  if (task.description) {
+    emailBody += `Description: ${task.description}\n`;
+  }
+  emailBody += `Reminder Message: ${task.reminderSettings?.reminderMessage || "Don't forget to complete your assigned task!"}\n`;
+  emailBody += `Due: ${dueDate}`;
+  
   sendEmail(
     email,
-    `Reminder: ${task.title}`,
-    `This is a reminder for your task: ${task.title}\nDue: ${task.dueDate}`
+    `IntelliHer Task Reminder: ${task.title}`,
+    emailBody
   ).then(() => {
     res.json({ success: true });
   }).catch((err) => {
@@ -131,6 +143,43 @@ app.delete('/api/tasks/:id', (req, res) => {
   } else {
     res.status(404).json({ error: 'Task not found' });
   }
+});
+
+// API: Update a task
+app.put('/api/tasks/:id', (req, res) => {
+  const tasks = loadTasks();
+  const taskIndex = tasks.findIndex(t => t.id === req.params.id);
+  
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: 'Task not found' });
+  }
+
+  const {
+    title,
+    description,
+    assignedToEmail,
+    assignedByName,
+    dueDate,
+    reminderSettings,
+    completed
+  } = req.body;
+
+  const updatedTask = {
+    ...tasks[taskIndex],
+    title: title || tasks[taskIndex].title,
+    description: description || tasks[taskIndex].description,
+    assignedToEmail: assignedToEmail || tasks[taskIndex].assignedToEmail,
+    assignedByName: assignedByName || tasks[taskIndex].assignedByName,
+    dueDate: dueDate || tasks[taskIndex].dueDate,
+    reminderSettings: reminderSettings || tasks[taskIndex].reminderSettings,
+    completed: completed !== undefined ? completed : tasks[taskIndex].completed,
+    id: req.params.id,
+    createdAt: tasks[taskIndex].createdAt
+  };
+
+  tasks[taskIndex] = updatedTask;
+  saveTasks(tasks);
+  res.json({ success: true, task: updatedTask });
 });
 
 // CRON: Check daily for reminders to send
