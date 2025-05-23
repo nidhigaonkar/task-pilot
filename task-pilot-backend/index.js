@@ -81,6 +81,19 @@ app.post('/api/tasks/:id/complete', (req, res) => {
   }
 });
 
+// API: Mark task as incomplete
+app.post('/api/tasks/:id/uncomplete', (req, res) => {
+  const tasks = loadTasks();
+  const task = tasks.find(t => t.id === req.params.id);
+  if (task) {
+    task.completed = false;
+    saveTasks(tasks);
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Task not found' });
+  }
+});
+
 // API: Get all tasks
 app.get('/api/tasks', (req, res) => {
   res.json(loadTasks());

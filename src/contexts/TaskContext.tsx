@@ -24,7 +24,7 @@ interface TaskContextType {
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
+export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessLevel, setAccessLevel] = useState<AccessLevel | null>(null);
@@ -39,10 +39,17 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
       .then(data => setTasks(data));
   }, []);
 
-  const filteredTasks = tasks.filter(task => 
-    (selectedRole === "all") && 
-    (showCompletedTasks || !task.completed)
-  );
+  const filteredTasks = tasks
+    .filter(task => 
+      (selectedRole === "all") && 
+      (showCompletedTasks || !task.completed)
+    )
+    .sort((a, b) => {
+      // If both tasks have the same completion status, maintain their original order
+      if (a.completed === b.completed) return 0;
+      // Put incomplete tasks first
+      return a.completed ? 1 : -1;
+    });
 
   // Add task using backend
   const addTask = (task: Omit<Task, "id" | "completed">) => {
@@ -70,35 +77,77 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const completeTask = (id: string) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === id ? { ...task, completed: true } : task
-      )
-    );
-    
-    const taskToComplete = tasks.find(task => task.id === id);
-    if (taskToComplete) {
-      toast({
-        title: "Task Completed",
-        description: `"${taskToComplete.title}" marked as completed.`,
+    fetch(`http://localhost:3001/api/tasks/${id}/complete`, {
+      method: 'POST'
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(prev => 
+            prev.map(task => 
+              task.id === id ? { ...task, completed: true } : task
+            )
+          );
+          
+          const taskToComplete = tasks.find(task => task.id === id);
+          if (taskToComplete) {
+            toast({
+              title: "Task Completed",
+              description: `"${taskToComplete.title}" marked as completed.`,
+            });
+          }
+        } else {
+          toast({
+            title: "Failed to Complete Task",
+            description: data.error || 'Unknown error',
+            variant: "destructive"
+          });
+        }
+      })
+      .catch(err => {
+        toast({
+          title: "Failed to Complete Task",
+          description: err.message,
+          variant: "destructive"
+        });
       });
-    }
   };
 
   const uncompleteTask = (id: string) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === id ? { ...task, completed: false } : task
-      )
-    );
-    
-    const taskToUncomplete = tasks.find(task => task.id === id);
-    if (taskToUncomplete) {
-      toast({
-        title: "Task Status Updated",
-        description: `"${taskToUncomplete.title}" marked as incomplete.`,
+    fetch(`http://localhost:3001/api/tasks/${id}/uncomplete`, {
+      method: 'POST'
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(prev => 
+            prev.map(task => 
+              task.id === id ? { ...task, completed: false } : task
+            )
+          );
+          
+          const taskToUncomplete = tasks.find(task => task.id === id);
+          if (taskToUncomplete) {
+            toast({
+              title: "Task Status Updated",
+              description: `"${taskToUncomplete.title}" marked as incomplete.`,
+            });
+          }
+        } else {
+          toast({
+            title: "Failed to Update Task",
+            description: data.error || 'Unknown error',
+            variant: "destructive"
+          });
+        }
+      })
+      .catch(err => {
+        toast({
+          title: "Failed to Update Task",
+          description: err.message,
+          variant: "destructive"
+        });
       });
-    }
   };
 
   const updateTask = (updatedTask: Task) => {
@@ -203,12 +252,12 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </TaskContext.Provider>
   );
-};
+}
 
-export const useTaskContext = () => {
+export function useTaskContext() {
   const context = useContext(TaskContext);
   if (context === undefined) {
     throw new Error("useTaskContext must be used within a TaskProvider");
   }
   return context;
-};
+}

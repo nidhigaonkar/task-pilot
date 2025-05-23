@@ -16,22 +16,6 @@
     "createdAt": "2025-05-21T01:45:34.742Z"
   },
   {
-    "id": "1747792088077",
-    "title": "hello",
-    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
-    "dueDate": "2025-05-22T00:00:00.000Z",
-    "reminderSettings": {
-      "daysBeforeDue": [
-        3,
-        1
-      ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
-    },
-    "assignedByName": "hi",
-    "completed": false,
-    "createdAt": "2025-05-21T01:48:08.077Z"
-  },
-  {
     "id": "1747792218174",
     "title": "testing",
     "assignedToEmail": "gaonkar.nidhi1@gmail.com",
@@ -60,7 +44,7 @@
       "reminderMessage": "Don't forget to complete your assigned task!"
     },
     "assignedByName": "intelliher",
-    "completed": false,
+    "completed": true,
     "createdAt": "2025-05-21T01:53:56.593Z"
   },
   {
@@ -76,24 +60,8 @@
       "reminderMessage": "Don't forget to complete your assigned task!"
     },
     "assignedByName": "hi",
-    "completed": false,
+    "completed": true,
     "createdAt": "2025-05-21T04:43:17.637Z"
-  },
-  {
-    "id": "1747803401901",
-    "title": "hello amma",
-    "assignedToEmail": "shruthi_Gaonkar@yahoo.com",
-    "dueDate": "2025-05-22T00:00:00.000Z",
-    "reminderSettings": {
-      "daysBeforeDue": [
-        3,
-        1
-      ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
-    },
-    "assignedByName": "nidhi",
-    "completed": false,
-    "createdAt": "2025-05-21T04:56:41.901Z"
   },
   {
     "id": "1747803402957",
@@ -112,54 +80,6 @@
     "createdAt": "2025-05-21T04:56:42.957Z"
   },
   {
-    "id": "1747804401012",
-    "title": "hiiiiiiiii",
-    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
-    "dueDate": "2025-05-22T00:00:00.000Z",
-    "reminderSettings": {
-      "daysBeforeDue": [
-        3,
-        1
-      ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
-    },
-    "assignedByName": "Nidhi",
-    "completed": false,
-    "createdAt": "2025-05-21T05:13:21.012Z"
-  },
-  {
-    "id": "1747804401018",
-    "title": "hiiiiiiiii",
-    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
-    "dueDate": "2025-05-22T00:00:00.000Z",
-    "reminderSettings": {
-      "daysBeforeDue": [
-        3,
-        1
-      ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
-    },
-    "assignedByName": "Nidhi",
-    "completed": false,
-    "createdAt": "2025-05-21T05:13:21.018Z"
-  },
-  {
-    "id": "1748024166215",
-    "title": "hi pappa",
-    "assignedToEmail": "pgaonkar@hotmail.com",
-    "dueDate": "2025-05-24T00:00:00.000Z",
-    "reminderSettings": {
-      "daysBeforeDue": [
-        3,
-        1
-      ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
-    },
-    "assignedByName": "Nidhi",
-    "completed": false,
-    "createdAt": "2025-05-23T18:16:06.215Z"
-  },
-  {
     "id": "1748024166220",
     "title": "hi pappa",
     "assignedToEmail": "pgaonkar@hotmail.com",
@@ -174,22 +94,6 @@
     "assignedByName": "Nidhi",
     "completed": false,
     "createdAt": "2025-05-23T18:16:06.220Z"
-  },
-  {
-    "id": "1748025910553",
-    "title": "hi",
-    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
-    "dueDate": "2025-05-24T00:00:00.000Z",
-    "reminderSettings": {
-      "daysBeforeDue": [
-        3,
-        1
-      ],
-      "reminderMessage": "Don't forget to complete your assigned task!"
-    },
-    "assignedByName": "hi",
-    "completed": false,
-    "createdAt": "2025-05-23T18:45:10.553Z"
   },
   {
     "id": "1748025960220",
@@ -208,9 +112,9 @@
     "createdAt": "2025-05-23T18:46:00.220Z"
   },
   {
-    "id": "1748025960224",
-    "title": "hi",
-    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
+    "id": "1748026623445",
+    "title": "elooo",
+    "assignedToEmail": "mdfsdfnksdf@gmail.com",
     "dueDate": "2025-05-24T00:00:00.000Z",
     "reminderSettings": {
       "daysBeforeDue": [
@@ -219,8 +123,24 @@
       ],
       "reminderMessage": "Don't forget to complete your assigned task!"
     },
-    "assignedByName": "hi",
+    "assignedByName": "dfsdkf",
     "completed": false,
-    "createdAt": "2025-05-23T18:46:00.224Z"
+    "createdAt": "2025-05-23T18:57:03.445Z"
+  },
+  {
+    "id": "1748027253719",
+    "title": "emsdklfm",
+    "assignedToEmail": "jkadnkasnd@gmail.com",
+    "dueDate": "2025-05-28T00:00:00.000Z",
+    "reminderSettings": {
+      "daysBeforeDue": [
+        3,
+        1
+      ],
+      "reminderMessage": "Don't forget to complete your assigned task!"
+    },
+    "assignedByName": "sdf",
+    "completed": false,
+    "createdAt": "2025-05-23T19:07:33.719Z"
   }
 ]
