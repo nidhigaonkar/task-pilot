@@ -11,14 +11,14 @@
       "config": { "distDir": "dist" }
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "https://task-pilot-backend.onrender.com/api/:path*"
+      "src": "/api/(.*)",
+      "dest": "task-pilot-backend/index.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 } 
