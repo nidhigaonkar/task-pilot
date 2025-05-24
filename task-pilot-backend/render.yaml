@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: task-pilot-backend
-    env: node
-    buildCommand: npm install
-    startCommand: node index.js
-    rootDir: .
-    nodeVersion: 18.x 
