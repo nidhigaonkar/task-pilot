@@ -144,5 +144,22 @@
     "assignedByName": "hi",
     "completed": false,
     "createdAt": "2025-05-23T19:26:23.270Z"
+  },
+  {
+    "id": "1748052143135",
+    "title": "sdkfsdkf",
+    "assignedToEmail": "gaonkar.nidhi1@gmail.com",
+    "dueDate": "2025-06-07T00:00:00.000Z",
+    "reminderSettings": {
+      "daysBeforeDue": [
+        3,
+        1
+      ],
+      "reminderMessage": "Don't forget to complete your assigned task!"
+    },
+    "assignedByName": "meeee",
+    "completed": false,
+    "createdAt": "2025-05-24T02:02:23.135Z",
+    "description": "testing vercel"
   }
 ]

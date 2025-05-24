@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const fs = require('fs');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const app = express();
 app.use(express.json());
@@ -202,6 +203,8 @@ cron.schedule('0 8 * * *', async () => {
   }
   console.log('Daily reminder check complete');
 });
+
+mongoose.connect(process.env.MONGODB_URI)
 
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));

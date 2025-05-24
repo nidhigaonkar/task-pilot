@@ -12,9 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "node-cron": "^3.0.2",
-    "nodemailer": "^6.9.1"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "node-cron": "^4.0.6",
+    "nodemailer": "^7.0.3",
+    "mongoose": "^7.6.3"
   }
 }
