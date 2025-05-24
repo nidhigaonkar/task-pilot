@@ -10,9 +10,17 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
+console.log('Attempting to connect to MongoDB...');
+console.log('MongoDB URI:', process.env.MONGODB_URI ? 'URI is set' : 'URI is not set');
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .then(() => {
+    console.log('Successfully connected to MongoDB');
+    console.log('Connection state:', mongoose.connection.readyState);
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    console.error('Error details:', err.message);
+  });
 
 // Task Schema
 const taskSchema = new mongoose.Schema({
