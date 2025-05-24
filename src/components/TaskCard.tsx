@@ -36,7 +36,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   };
 
   const handleRemind = () => {
-    fetch(`http://localhost:3001/api/tasks/${task.id}/remind`, {
+    fetch(`/api/tasks/${task.id}/remind`, {
       method: 'POST'
     })
       .then(res => res.json())

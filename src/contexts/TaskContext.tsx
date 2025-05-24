@@ -34,7 +34,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
 
   // Fetch tasks from backend on mount
   useEffect(() => {
-    fetch('http://localhost:3001/api/tasks')
+    fetch('/api/tasks')
       .then(res => res.json())
       .then(data => setTasks(data));
   }, []);
@@ -50,7 +50,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     });
 
   const addTask = (task: Omit<Task, "id" | "completed">) => {
-    fetch('http://localhost:3001/api/tasks', {
+    fetch('/api/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(task)
@@ -74,7 +74,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const completeTask = (id: string) => {
-    fetch(`http://localhost:3001/api/tasks/${id}/complete`, {
+    fetch(`/api/tasks/${id}/complete`, {
       method: 'POST'
     })
       .then(res => res.json())
@@ -104,7 +104,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const uncompleteTask = (id: string) => {
-    fetch(`http://localhost:3001/api/tasks/${id}/uncomplete`, {
+    fetch(`/api/tasks/${id}/uncomplete`, {
       method: 'POST'
     })
       .then(res => res.json())
@@ -134,7 +134,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateTask = (updatedTask: Task) => {
-    fetch(`http://localhost:3001/api/tasks/${updatedTask.id}`, {
+    fetch(`/api/tasks/${updatedTask.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -207,7 +207,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const deleteTask = (id: string) => {
-    fetch(`http://localhost:3001/api/tasks/${id}`, {
+    fetch(`/api/tasks/${id}`, {
       method: 'DELETE'
     })
       .then(res => res.json())
