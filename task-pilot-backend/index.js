@@ -25,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Task Schema
 const taskSchema = new mongoose.Schema({
   title: String,
+  description: String,
   assignedToEmail: String,
   dueDate: Date,
   reminderSettings: {
@@ -34,6 +35,15 @@ const taskSchema = new mongoose.Schema({
   assignedByName: String,
   completed: Boolean,
   createdAt: { type: Date, default: Date.now }
+}, {
+  toJSON: {
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+      return ret;
+    }
+  }
 });
 
 const Task = mongoose.model('Task', taskSchema);
@@ -60,9 +70,10 @@ function sendEmail(to, subject, text) {
 // API: Add a new task
 app.post('/api/tasks', async (req, res) => {
   try {
-    const { title, assignedToEmail, dueDate, reminderSettings, assignedByName } = req.body;
+    const { title, description, assignedToEmail, dueDate, reminderSettings, assignedByName } = req.body;
     const newTask = new Task({
       title,
+      description,
       assignedToEmail,
       dueDate,
       reminderSettings,
@@ -72,6 +83,7 @@ app.post('/api/tasks', async (req, res) => {
     await newTask.save();
     res.json({ success: true, task: newTask });
   } catch (error) {
+    console.error('Create task error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -128,6 +140,7 @@ app.delete('/api/tasks/:id', async (req, res) => {
       res.status(404).json({ error: 'Task not found' });
     }
   } catch (error) {
+    console.error('Delete task error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -150,19 +163,54 @@ app.put('/api/tasks/:id', async (req, res) => {
       completed
     } = req.body;
 
-    Object.assign(task, {
-      title: title || task.title,
-      description: description || task.description,
-      assignedToEmail: assignedToEmail || task.assignedToEmail,
-      assignedByName: assignedByName || task.assignedByName,
-      dueDate: dueDate || task.dueDate,
-      reminderSettings: reminderSettings || task.reminderSettings,
-      completed: completed !== undefined ? completed : task.completed
-    });
+    // Update task fields
+    task.title = title || task.title;
+    task.description = description || task.description;
+    task.assignedToEmail = assignedToEmail || task.assignedToEmail;
+    task.assignedByName = assignedByName || task.assignedByName;
+    task.dueDate = dueDate || task.dueDate;
+    task.reminderSettings = reminderSettings || task.reminderSettings;
+    task.completed = completed !== undefined ? completed : task.completed;
 
     await task.save();
     res.json({ success: true, task });
   } catch (error) {
+    console.error('Update task error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API: Send a reminder email for a task
+app.post('/api/tasks/:id/remind', async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    const email = (task.assignedToEmail || '').trim();
+    console.log('Sending reminder to:', email);
+    
+    // Format the date to show only YYYY-MM-DD
+    const dueDate = new Date(task.dueDate).toISOString().split('T')[0];
+    
+    // Build email body with default reminder message
+    let emailBody = `This is a reminder for your task: ${task.title}\n`;
+    if (task.description) {
+      emailBody += `Description: ${task.description}\n`;
+    }
+    emailBody += `Reminder Message: ${task.reminderSettings?.reminderMessage || "Don't forget to complete your assigned task!"}\n`;
+    emailBody += `Due: ${dueDate}`;
+    
+    await sendEmail(
+      email,
+      `Task Reminder: ${task.title}`,
+      emailBody
+    );
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to send reminder:', error);
     res.status(500).json({ error: error.message });
   }
 });
