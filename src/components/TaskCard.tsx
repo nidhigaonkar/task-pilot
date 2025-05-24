@@ -74,12 +74,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <CardDescription className="flex items-center gap-1">
             <Clock className="h-3 w-3" /> 
             {formatDate(task.dueDate)}
-            {task.assignedToEmail && (
-              <span className="ml-1">• Assigned to: {task.assignedToEmail}</span>
-            )}
-            {task.assignedByName && (
-              <span className="ml-1">• Assigned by: {task.assignedByName}</span>
-            )}
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Mail className="h-4 w-4" />
+              <span>Assigned to:</span>
+              <span className="font-medium">
+                {Array.isArray(task.assignedToEmail) 
+                  ? task.assignedToEmail.join(', ')
+                  : task.assignedToEmail}
+              </span>
+            </div>
           </CardDescription>
         </CardHeader>
         <CardContent>

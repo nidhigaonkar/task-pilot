@@ -6,7 +6,7 @@ export interface Task {
   description: string;
   dueDate: string; // ISO format
   assignedTo?: string; // legacy, for backward compatibility
-  assignedToEmail: string; // for admins or for reminders, now required
+  assignedToEmail: string[]; // Changed from string to string[] to support multiple emails
   completed: boolean;
   links?: string[];
   reminderSettings: ReminderSettings;

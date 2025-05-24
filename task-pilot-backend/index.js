@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const taskSchema = new mongoose.Schema({
   title: String,
   description: String,
-  assignedToEmail: String,
+  assignedToEmail: [String],
   dueDate: Date,
   reminderSettings: {
     daysBeforeDue: [Number],
@@ -59,9 +59,10 @@ const transporter = nodemailer.createTransport({
 
 // Send an email
 function sendEmail(to, subject, text) {
+  const recipients = Array.isArray(to) ? to.join(', ') : to;
   return transporter.sendMail({
     from: process.env.GMAIL_USER,
-    to,
+    to: recipients,
     subject,
     text
   });
@@ -70,6 +71,7 @@ function sendEmail(to, subject, text) {
 // API: Add a new task
 app.post('/api/tasks', async (req, res) => {
   try {
+    console.log('Received task creation request:', req.body);
     const { title, description, assignedToEmail, dueDate, reminderSettings, assignedByName } = req.body;
     const newTask = new Task({
       title,
@@ -80,10 +82,13 @@ app.post('/api/tasks', async (req, res) => {
       assignedByName,
       completed: false
     });
-    await newTask.save();
-    res.json({ success: true, task: newTask });
+    console.log('Attempting to save task:', newTask);
+    const savedTask = await newTask.save();
+    console.log('Task saved successfully:', savedTask);
+    res.json({ success: true, task: savedTask });
   } catch (error) {
     console.error('Create task error:', error);
+    console.error('Error details:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -123,9 +128,13 @@ app.post('/api/tasks/:id/uncomplete', async (req, res) => {
 // API: Get all tasks
 app.get('/api/tasks', async (req, res) => {
   try {
+    console.log('Fetching all tasks...');
     const tasks = await Task.find().sort({ createdAt: -1 });
+    console.log(`Found ${tasks.length} tasks`);
     res.json(tasks);
   } catch (error) {
+    console.error('Error fetching tasks:', error);
+    console.error('Error details:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -188,8 +197,14 @@ app.post('/api/tasks/:id/remind', async (req, res) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    const email = (task.assignedToEmail || '').trim();
-    console.log('Sending reminder to:', email);
+    const emails = Array.isArray(task.assignedToEmail) ? task.assignedToEmail : [task.assignedToEmail];
+    const validEmails = emails.filter(email => email && email.trim());
+    
+    if (validEmails.length === 0) {
+      return res.status(400).json({ error: 'No valid email addresses found' });
+    }
+
+    console.log('Sending reminder to:', validEmails);
     
     // Format the date to show only YYYY-MM-DD
     const dueDate = new Date(task.dueDate).toISOString().split('T')[0];
@@ -203,7 +218,7 @@ app.post('/api/tasks/:id/remind', async (req, res) => {
     emailBody += `Due: ${dueDate}`;
     
     await sendEmail(
-      email,
+      validEmails,
       `Task Reminder: ${task.title}`,
       emailBody
     );

@@ -22,6 +22,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,7 +58,9 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
   const form = useForm<Task & ReminderDaysInput>({
     defaultValues: {
       ...taskWithDefaults,
-      assignedToEmail: taskWithDefaults.assignedToEmail || "",
+      assignedToEmail: Array.isArray(taskWithDefaults.assignedToEmail) 
+        ? taskWithDefaults.assignedToEmail.join(', ')
+        : taskWithDefaults.assignedToEmail || "",
       assignedByName: taskWithDefaults.assignedByName || "",
       days: taskWithDefaults.reminderSettings.daysBeforeDue.join(", ")
     }
@@ -70,9 +73,15 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
       .map(day => parseInt(day.trim()))
       .filter(day => !isNaN(day));
 
+    // Convert comma-separated string of emails to array
+    const emailArray = data.assignedToEmail
+      .split(/[\n,]/)
+      .map(email => email.trim())
+      .filter(email => email);
+
     const updatedTask: Task = {
       ...data,
-      assignedToEmail: data.assignedToEmail,
+      assignedToEmail: emailArray,
       assignedByName: data.assignedByName,
       reminderSettings: {
         daysBeforeDue: daysArray,
@@ -139,10 +148,16 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({ task, isOpen, onClose }
                   name="assignedToEmail"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Assigned To (Email)</FormLabel>
+                      <FormLabel>Assign To (Email Addresses)</FormLabel>
                       <FormControl>
-                        <Input {...field} type="email" />
+                        <Textarea
+                          {...field}
+                          placeholder="Enter email addresses (one per line or comma-separated)"
+                        />
                       </FormControl>
+                      <FormDescription>
+                        Enter multiple email addresses separated by commas or new lines
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

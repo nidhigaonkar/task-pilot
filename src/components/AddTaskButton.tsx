@@ -43,10 +43,15 @@ const AddTaskButton: React.FC<AddTaskButtonProps> = ({ className }) => {
     if (!title.trim()) newErrors.title = "Title is required";
     if (!description.trim()) newErrors.description = "Description is required";
     if (!dueDate) newErrors.dueDate = "Due date is required";
-    if (!assignedToEmail.trim()) newErrors.assignedToEmail = "Email is required";
-    if (assignedToEmail && !/^[^\s@]+@[^-\s@]+\.[^\s@]+$/.test(assignedToEmail)) {
-      newErrors.assignedToEmail = "Valid email is required";
+    if (!assignedToEmail.trim()) newErrors.assignedToEmail = "At least one email is required";
+    
+    // Validate each email address
+    const emailList = assignedToEmail.split(/[\n,]/).map(email => email.trim()).filter(email => email);
+    const invalidEmails = emailList.filter(email => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    if (invalidEmails.length > 0) {
+      newErrors.assignedToEmail = "One or more email addresses are invalid";
     }
+    
     if (!assignedByName.trim()) newErrors.assignedByName = "Your name is required";
     if (reminderDays.length === 0) {
       newErrors.reminderDays = "At least one reminder day is required";
@@ -61,23 +66,32 @@ const AddTaskButton: React.FC<AddTaskButtonProps> = ({ className }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    
+    const emailList = assignedToEmail
+      .split(/[\n,]/)
+      .map(email => email.trim())
+      .filter(email => email);
+      
     const linkList = links
       .split(/[\n,]/)
       .map(link => link.trim())
       .filter(link => link.length > 0);
+      
     const reminderSettings: ReminderSettings = {
       daysBeforeDue: reminderDays,
       reminderMessage
     };
+    
     await addTask({
       title,
       description,
       dueDate: new Date(dueDate).toISOString(),
-      assignedToEmail,
+      assignedToEmail: emailList,
       assignedByName,
       links: linkList.length > 0 ? linkList : undefined,
       reminderSettings
     });
+    
     setTitle("");
     setDescription("");
     setDueDate("");
@@ -159,15 +173,17 @@ const AddTaskButton: React.FC<AddTaskButtonProps> = ({ className }) => {
               {/* Only Assigned To (Email) field for all users */}
               <div className="grid gap-2">
                 <Label htmlFor="assignedToEmail" className={errors.assignedToEmail ? "text-destructive" : ""}>
-                  Assigned To (Email) {errors.assignedToEmail && <span className="text-sm">({errors.assignedToEmail})</span>}
+                  Assign To (Email Addresses)
+                  {errors.assignedToEmail && <span className="text-sm ml-1">({errors.assignedToEmail})</span>}
                 </Label>
-                <Input
+                <Textarea
                   id="assignedToEmail"
-                  type="email"
                   value={assignedToEmail}
                   onChange={(e) => setAssignedToEmail(e.target.value)}
+                  placeholder="Enter email addresses (one per line or comma-separated)"
                   className={errors.assignedToEmail ? "border-destructive" : ""}
                 />
+                <p className="text-sm text-gray-500">Enter multiple email addresses separated by commas or new lines</p>
               </div>
               
               {/* Assigned By (Name) for all users */}

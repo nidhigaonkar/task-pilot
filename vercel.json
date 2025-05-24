@@ -20,5 +20,11 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://task-pilot-backend.onrender.com/api/:path*"
+    }
   ]
 } 
