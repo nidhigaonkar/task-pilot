@@ -74,12 +74,12 @@ app.post('/api/tasks', async (req, res) => {
     console.log('Received task creation request:', req.body);
     const { title, description, assignedToEmail, dueDate, reminderSettings, assignedByName } = req.body;
     const newTask = new Task({
-      title,
+    title,
       description,
-      assignedToEmail,
-      dueDate,
-      reminderSettings,
-      assignedByName,
+    assignedToEmail,
+    dueDate,
+    reminderSettings,
+    assignedByName,
       completed: false
     });
     console.log('Attempting to save task:', newTask);
@@ -97,12 +97,12 @@ app.post('/api/tasks', async (req, res) => {
 app.post('/api/tasks/:id/complete', async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
-    if (task) {
-      task.completed = true;
+  if (task) {
+    task.completed = true;
       await task.save();
-      res.json({ success: true });
-    } else {
-      res.status(404).json({ error: 'Task not found' });
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Task not found' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -113,12 +113,12 @@ app.post('/api/tasks/:id/complete', async (req, res) => {
 app.post('/api/tasks/:id/uncomplete', async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
-    if (task) {
-      task.completed = false;
+  if (task) {
+    task.completed = false;
       await task.save();
-      res.json({ success: true });
-    } else {
-      res.status(404).json({ error: 'Task not found' });
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Task not found' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -144,9 +144,9 @@ app.delete('/api/tasks/:id', async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (task) {
-      res.json({ success: true });
-    } else {
-      res.status(404).json({ error: 'Task not found' });
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Task not found' });
     }
   } catch (error) {
     console.error('Delete task error:', error);
@@ -159,18 +159,18 @@ app.put('/api/tasks/:id', async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
+    return res.status(404).json({ error: 'Task not found' });
+  }
 
-    const {
-      title,
-      description,
-      assignedToEmail,
-      assignedByName,
-      dueDate,
-      reminderSettings,
-      completed
-    } = req.body;
+  const {
+    title,
+    description,
+    assignedToEmail,
+    assignedByName,
+    dueDate,
+    reminderSettings,
+    completed
+  } = req.body;
 
     // Update task fields
     task.title = title || task.title;
@@ -234,11 +234,11 @@ app.post('/api/tasks/:id/remind', async (req, res) => {
 cron.schedule('0 8 * * *', async () => {
   try {
     const tasks = await Task.find({ completed: false });
-    const today = new Date();
+  const today = new Date();
     
-    for (const task of tasks) {
-      const due = new Date(task.dueDate);
-      const daysUntilDue = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+  for (const task of tasks) {
+    const due = new Date(task.dueDate);
+    const daysUntilDue = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
       
       if (task.reminderSettings?.daysBeforeDue?.includes(daysUntilDue)) {
         await sendEmail(

@@ -1,53 +1,82 @@
+# Task Pilot
 
-## Project info
+A task management app.
 
-## How can I edit this code?
+## Technologies Used
 
-There are several ways of editing your application.
+- React
+- TypeScript
+- Node.js
+- Express.js
+- MongoDB (via Mongoose)
 
-**Use your preferred IDE**
+## Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone the repository:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+git clone <repository_url>
+cd task-pilot
+```
 
-Follow these steps:
+2. Install frontend dependencies:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+cd frontend
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. Install backend dependencies:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+cd ../task-pilot-backend
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Set up environment variables:
+   - Create a `.env` file in the `task-pilot-backend` directory.
+   - Add your MongoDB connection URI to the `.env` file:
+
+     ```
+     MONGODB_URI=<your_mongodb_connection_string>
+     ```
+   - Make sure to replace `<your_mongodb_connection_string>` with your actual connection string.
+
+5. Run the backend server:
+
+```bash
+cd ../task-pilot-backend
+npm start # or node index.js
+```
+
+6. Run the frontend development server:
+
+```bash
+cd ../frontend
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The frontend should now be running on `http://localhost:8081` and the backend on `http://localhost:3000`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Deployment
 
-**Use GitHub Codespaces**
+This project can be deployed to platforms like Vercel (frontend and backend as a monorepo setup).
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Vercel Deployment
 
-## What technologies are used for this project?
+1. Connect your Git repository to Vercel.
+2. Configure the project with the following settings:
+   - **Root Directory:** Leave empty (or set to `./` if needed, depending on Vercel's autoconfiguration).
+   - **Build Command:** `npm run build` (in the frontend subdirectory)
+   - **Output Directory:** `dist` (in the frontend subdirectory)
+   - **Install Command:** `npm install && cd task-pilot-backend && npm install && cd ..`
+   - **Development Command:** `npm run dev`
+3. Add environment variables in Vercel, including `MONGODB_URI` with your MongoDB Atlas connection string.
+4. Vercel will automatically detect the monorepo structure based on the `vercel.json` file in the root directory.
 
-This project is built with:
+## Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
+- `frontend/`: Contains the React/TypeScript frontend code.
+- `task-pilot-backend/`: Contains the Node.js/Express.js backend code.
+- `vercel.json`: Configuration file for Vercel monorepo deployment.
+- `.gitignore`: Specifies intentionally untracked files that Git should ignore.
